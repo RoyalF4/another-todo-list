@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { TodoType } from "../types";
 
 type AddTodoProps = {
-  onAdd: (todo: TodoType) => void;
+  onAdd: (name: string) => void;
   onHide: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
@@ -11,7 +10,7 @@ function AddTodo({ onHide, onAdd }: AddTodoProps) {
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    onAdd({ name });
+    onAdd(name);
     onHide(false);
   }
 

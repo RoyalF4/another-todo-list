@@ -15,15 +15,31 @@ function TodoList({ todos, setTodos }: TodoListProps) {
     setAddTodo(true);
   }
 
-  function handleAddTodo(todo: TodoType) {
-    setTodos((todos) => [...todos, todo]);
+  function handleAddTodo(name: string) {
+    const id = todos[todos.length - 1].id + 1;
+    setTodos((todos) => [...todos, { id, name }]);
+  }
+
+  function handleDelete(name: string) {
+    setTodos((todos) => todos.filter((todo) => todo.name != name));
+  }
+
+  function handleUpdate(id: number, name: string) {
+    setTodos((todos) =>
+      todos.map((todo) => (todo.id == id ? { ...todo, name } : todo)),
+    );
   }
 
   return (
     <>
       <ul>
         {todos.map((todo) => (
-          <Todo todo={todo} />
+          <Todo
+            todo={todo}
+            onDelete={handleDelete}
+            onUpdate={handleUpdate}
+            key={todo.id}
+          />
         ))}
       </ul>
       {addTodo && <AddTodo onAdd={handleAddTodo} onHide={setAddTodo} />}

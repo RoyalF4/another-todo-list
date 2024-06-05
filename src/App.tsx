@@ -5,12 +5,15 @@ import { TodoType } from "./types";
 
 const todoData: TodoType[] = [
   {
+    id: 0,
     name: "Wash dishes",
   },
   {
+    id: 1,
     name: "Do laundry",
   },
   {
+    id: 2,
     name: "Finish homework",
   },
 ];
