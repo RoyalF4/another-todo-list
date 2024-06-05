@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Header from "./components/Header";
 import TodoList from "./components/TodoList";
 import { TodoType } from "./types";
@@ -15,10 +16,11 @@ const todoData: TodoType[] = [
 ];
 
 export default function App() {
+  const [todos, setTodos] = useState(todoData);
   return (
     <>
       <Header />
-      <TodoList todos={todoData} />
+      <TodoList todos={todos} setTodos={setTodos} />
     </>
   );
 }
