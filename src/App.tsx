@@ -1,7 +1,24 @@
+import Header from "./components/Header";
+import TodoList from "./components/TodoList";
+import { TodoType } from "./types";
+
+const todoData: TodoType[] = [
+  {
+    name: "Wash dishes",
+  },
+  {
+    name: "Do laundry",
+  },
+  {
+    name: "Finish homework",
+  },
+];
+
 export default function App() {
   return (
-    <div className="text-bold  font-bold text-gray-500 underline">
-      Hello World!
-    </div>
+    <>
+      <Header />
+      <TodoList todos={todoData} />
+    </>
   );
 }
