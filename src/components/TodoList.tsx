@@ -2,6 +2,7 @@ import { useState } from "react";
 import { TodoType } from "../types";
 import Todo from "./Todo";
 import AddTodo from "./AddTodo";
+import { createTodoAPI, deleteTodoAPI, updateTodoAPI } from "../api/todo-api";
 
 type TodoListProps = {
   todos: TodoType[];
@@ -10,24 +11,40 @@ type TodoListProps = {
 
 function TodoList({ todos, setTodos }: TodoListProps) {
   const [addTodo, setAddTodo] = useState(false);
+  const [editing, setEditing] = useState(false);
 
   function handleAddClick() {
     setAddTodo(true);
   }
 
-  function handleAddTodo(name: string) {
-    const id = todos[todos.length - 1].id + 1;
-    setTodos((todos) => [...todos, { id, name }]);
+  async function handleAddTodo(title: string) {
+    try {
+      const newTodo = await createTodoAPI({ title });
+      setTodos((todos) => [...todos, newTodo]);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  function handleDelete(name: string) {
-    setTodos((todos) => todos.filter((todo) => todo.name != name));
+  async function handleDelete(id: string) {
+    try {
+      await deleteTodoAPI(id);
+      setTodos((todos) => todos.filter((todo) => todo._id != id));
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  function handleUpdate(id: number, name: string) {
-    setTodos((todos) =>
-      todos.map((todo) => (todo.id == id ? { ...todo, name } : todo)),
-    );
+  async function handleUpdate(id: string, title: string) {
+    try {
+      const updatedTodo = await updateTodoAPI(id, title);
+
+      setTodos((todos) =>
+        todos.map((todo) => (todo._id == id ? updatedTodo : todo)),
+      );
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
@@ -38,7 +55,9 @@ function TodoList({ todos, setTodos }: TodoListProps) {
             todo={todo}
             onDelete={handleDelete}
             onUpdate={handleUpdate}
-            key={todo.id}
+            editing={editing}
+            setEditing={setEditing}
+            key={todo._id}
           />
         ))}
       </ul>

@@ -1,25 +1,24 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "./components/Header";
 import TodoList from "./components/TodoList";
 import { TodoType } from "./types";
-
-const todoData: TodoType[] = [
-  {
-    id: 0,
-    name: "Wash dishes",
-  },
-  {
-    id: 1,
-    name: "Do laundry",
-  },
-  {
-    id: 2,
-    name: "Finish homework",
-  },
-];
+import { fetchTodosAPI } from "./api/todo-api";
 
 export default function App() {
-  const [todos, setTodos] = useState(todoData);
+  const [todos, setTodos] = useState<TodoType[]>([]);
+
+  useEffect(() => {
+    async function getTodos() {
+      try {
+        const todos = await fetchTodosAPI();
+        setTodos(todos);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    getTodos();
+  }, []);
   return (
     <>
       <Header />

@@ -5,23 +5,34 @@ import { useState } from "react";
 
 type TodoProps = {
   todo: TodoType;
+  editing: boolean;
   onDelete: (name: string) => void;
-  onUpdate: (id: number, name: string) => void;
+  onUpdate: (id: string, title: string) => void;
+  setEditing: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-function Todo({ todo, onDelete, onUpdate }: TodoProps) {
-  const [name, setName] = useState(todo.name);
+function Todo({ todo, onDelete, onUpdate, editing, setEditing }: TodoProps) {
+  const [title, setTitle] = useState(todo.title);
   const [edit, setEdit] = useState(false);
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    onUpdate(todo.id, name);
+    onUpdate(todo._id, title);
     setEdit(false);
+    setEditing(false);
   }
 
   function onCancel() {
-    setName(todo.name);
+    setTitle(todo.title);
     setEdit(false);
+    setEditing(false);
+  }
+
+  function handleEdit() {
+    if (!editing) {
+      setEdit(true);
+      setEditing(true);
+    }
   }
 
   return (
@@ -29,10 +40,11 @@ function Todo({ todo, onDelete, onUpdate }: TodoProps) {
       {edit && (
         <form onSubmit={(e) => handleSubmit(e)}>
           <input
+            className="capitalize"
             autoFocus
             type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
           />
           <button type="button" onClick={onCancel}>
             Cancel
@@ -42,11 +54,11 @@ function Todo({ todo, onDelete, onUpdate }: TodoProps) {
       )}
       {!edit && (
         <>
-          <p>{name}</p>
-          <button onClick={() => setEdit(true)}>
+          <p className="capitalize">{title}</p>
+          <button onClick={handleEdit}>
             <FontAwesomeIcon icon={faPenToSquare} />
           </button>
-          <button onClick={() => onDelete(name)}>
+          <button onClick={() => onDelete(todo._id)}>
             <FontAwesomeIcon icon={faTrashCan} />
           </button>
         </>
